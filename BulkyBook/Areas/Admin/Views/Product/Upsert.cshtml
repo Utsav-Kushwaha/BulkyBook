@@ -95,7 +95,8 @@
                     <label>Category</label> 
                 </div>
                 <div class="col-8">
-                    @Html.DropDownListFor(m => m.Product.CategoryId, Model.CategoryList, "-Select a Category-", new { @class = "form-control" })
+                    @*this is using catlist which is directly fro dbcontext*@
+                    @Html.DropDownListFor(m => m.Product.CategoryId, Model.catlist, "-Select a Category-", new { @class = "form-control" })
                     <span asp-validation-for="Product.CategoryId" class="text-danger"></span>
                 </div>
             </div>

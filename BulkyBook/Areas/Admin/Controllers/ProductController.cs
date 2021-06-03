@@ -11,6 +11,8 @@ using System.Threading.Tasks;
 using System.IO;
 using Microsoft.AspNetCore.Authorization;
 using BulkyBook.Utility;
+using BulkyBook.DataAccess.Data;
+using Microsoft.EntityFrameworkCore;
 
 namespace BulkyBook.Areas.Admin.Controllers
 {
@@ -18,16 +20,30 @@ namespace BulkyBook.Areas.Admin.Controllers
     [Authorize(Roles = SD.Role_Admin)]
     public class ProductController : Controller
     {
+        //change to try it with DB Context
+        private readonly ApplicationDbContext _db;
+
         private readonly IUnitOfWork _unitOfWork;
         private readonly IWebHostEnvironment _hostEnvironment;
-        public ProductController(IUnitOfWork unitOfWork, IWebHostEnvironment hostEnvironment)
+        public ProductController(IUnitOfWork unitOfWork, IWebHostEnvironment hostEnvironment, ApplicationDbContext db)
         {
             _unitOfWork = unitOfWork;
             _hostEnvironment = hostEnvironment;
+            _db = db;
         }
-        public IActionResult Index()
+
+      //changed to fetch data from CategoryId and bind it to Product's Category Object
+        public async Task<IActionResult> Index()
         {
-            return View();
+            List < Product> prolist = new List<Product>();
+            prolist = _db.Products.ToList();
+
+            foreach(var pro in prolist)
+            {
+                pro.Category =  _db.Categories.Find(pro.CategoryId);
+            }
+
+            return View(prolist);
         }
 
 
@@ -37,11 +53,17 @@ namespace BulkyBook.Areas.Admin.Controllers
             ProductVM productVM = new ProductVM()
             {
                 Product = new Product(),
-                CategoryList = _unitOfWork.Category.GetAll().Select(i=> new SelectListItem { 
+                CategoryList = _unitOfWork.Category.GetAll().Select(i => new SelectListItem {
                     Text = i.Name,
-                    Value= i.Id.ToString()
+                    Value = i.Id.ToString()
                 }),
                 CoverTypeList = _unitOfWork.CoverType.GetAll().Select(i => new SelectListItem
+                {
+                    Text = i.Name,
+                    Value = i.Id.ToString()
+                }),
+                //this one is to try to build select list directly fetching data by dbcontext
+                catlist = _db.Categories.Select(i => new SelectListItem
                 {
                     Text = i.Name,
                     Value = i.Id.ToString()
@@ -53,6 +75,7 @@ namespace BulkyBook.Areas.Admin.Controllers
                 return View(productVM);
             }
             //this is for Edit
+            productVM.Product = _db.Products.Find(id);
             productVM.Product = _unitOfWork.Product.Get(id.GetValueOrDefault());
             if (productVM.Product == null)
             {

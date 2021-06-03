@@ -1,4 +1,4 @@
-﻿
+﻿@model IEnumerable<Product>
 @{
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
@@ -25,6 +25,46 @@
                 <th></th>
             </tr>
         </thead>
+    </table>
+</div>
+
+@*Following table is to populated data by Model instead of JS*@
+<div class="p-4 border rounded">
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.Title)
+                </th>
+                <th>
+                    CategoryName
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+
+        <tbody>
+            <tr>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Title)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Category.Name)
+                    </td>
+                    <td>
+                        <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-primary text-white">Edit</a>
+                        <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-danger text-white">Delete</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
     </table>
 </div>
 

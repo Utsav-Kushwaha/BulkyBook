@@ -1,4 +1,7 @@
 ﻿@model BulkyBook.Models.ViewModels.ShoppingCartVM
+@using Microsoft.Extensions.Options
+
+@inject IOptions<BulkyBook.Utility.StripeSettings> Stripe
 
 <form method="post">
     <br />
@@ -29,6 +32,7 @@
                                     </div>
                                     <div class="col-9">
                                         <input asp-for="OrderHeader.Name" type="text" class="form-control" />
+                                        <span asp-validation-for="OrderHeader.Name" class="text-danger"></span>
                                     </div>
                                 </div>
                                 <div class="row my-1">
@@ -36,7 +40,8 @@
                                         <label>Phone</label>
                                     </div>
                                     <div class="col-9">
-                                        <input  asp-for="OrderHeader.PhoneNumber" type="text" class="form-control" />
+                                        <input asp-for="OrderHeader.PhoneNumber" type="text" class="form-control" />
+                                        <span asp-validation-for="OrderHeader.PhoneNumber" class="text-danger"></span>
                                     </div>
                                 </div>
                                 <div class="row my-1">
@@ -44,7 +49,8 @@
                                         <label>Street Address</label>
                                     </div>
                                     <div class="col-9">
-                                        <input  asp-for="OrderHeader.StreetAddress" type="text" class="form-control" />
+                                        <input asp-for="OrderHeader.StreetAddress" type="text" class="form-control" />
+                                        <span asp-validation-for="OrderHeader.StreetAddress" class="text-danger"></span>
                                     </div>
                                 </div>
                                 <div class="row my-1">
@@ -52,7 +58,8 @@
                                         <label>City</label>
                                     </div>
                                     <div class="col-9">
-                                        <input  asp-for="OrderHeader.City" type="text" class="form-control" />
+                                        <input asp-for="OrderHeader.City" type="text" class="form-control" />
+                                        <span asp-validation-for="OrderHeader.City" class="text-danger"></span>
                                     </div>
                                 </div>
                                 <div class="row my-1">
@@ -60,7 +67,8 @@
                                         <label>State</label>
                                     </div>
                                     <div class="col-9">
-                                        <input  asp-for="OrderHeader.State" type="text" class="form-control" />
+                                        <input asp-for="OrderHeader.State" type="text" class="form-control" />
+                                        <span asp-validation-for="OrderHeader.State" class="text-danger"></span>
                                     </div>
                                 </div>
                                 <div class="row my-1">
@@ -68,7 +76,8 @@
                                         <label>Postal Code</label>
                                     </div>
                                     <div class="col-9">
-                                        <input  asp-for="OrderHeader.PostalCode" type="text" class="form-control" />
+                                        <input asp-for="OrderHeader.PostalCode" type="text" class="form-control" />
+                                        <span asp-validation-for="OrderHeader.PostalCode" class="text-danger"></span>
                                     </div>
                                 </div>
                             </div>
@@ -102,7 +111,31 @@
                         </div>
                         <div class="col-12 col-md-4">
 
-                            <button type="submit" value="Place Order" class="btn btn-success form-control">Place Order</button>
+                            @{
+                                var OrderTotalForStipe = Model.OrderHeader.OrderTotal * 100;
+                            }
+                            @if (Model.OrderHeader.ApplicationUser.Company == null || !Model.OrderHeader.ApplicationUser.Company.IsAuthorizedCompany)
+                            {
+                                <script src="https://checkout.stripe.com/checkout.js" class="stripe-button"
+                                        data-key="@Stripe.Value.PublishableKey"
+                                        data-amount="@OrderTotalForStipe"
+                                        data-name="Bulky Book"
+                                        data-label="Place Order"
+                                        data-description="Get Books, For Less"
+                                        data-locale="auto"
+                                        data-allow-remember-me="false"
+                                        data-image="https://stripe.com/img/documentation/checkout/marketplace.png">
+
+                                </script>
+                                <script>
+                                    document.getElementsByClassName("stripe-button-el")[0].style.display = "none";
+                                </script>
+                                <button type="submit" value="Place Order" class="btn btn-success form-control">Place Order</button>
+                            }
+                            else
+                            {
+                                <button type="submit" value="Place Order" class="btn btn-primary form-control">Place Order</button>
+                            }
                         </div>
                     </div>
                 </div>
@@ -110,3 +143,7 @@
         </div>
     </div>
 </form>
+
+@section Scripts{ 
+    <partial name="_ValidationScriptsPartial"></partial>
+}

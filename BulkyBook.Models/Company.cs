@@ -18,6 +18,6 @@ namespace BulkyBook.Models
         public string State { get; set; }
         public string PostalCode { get; set; }
         public string PhoneNumber { get; set; }
-        public string IsAuthorizedCompany { get; set; }
+        public bool IsAuthorizedCompany { get; set; }
     }
 }

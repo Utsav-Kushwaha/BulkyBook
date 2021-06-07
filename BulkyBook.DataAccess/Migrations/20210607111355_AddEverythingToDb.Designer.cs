@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BulkyBook.DataAccess.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20210605191546_AddValidationInOrderHeader")]
-    partial class AddValidationInOrderHeader
+    [Migration("20210607111355_AddEverythingToDb")]
+    partial class AddEverythingToDb
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {

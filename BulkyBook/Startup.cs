@@ -51,13 +51,13 @@ namespace BulkyBook
             });
             services.AddAuthentication().AddFacebook(options =>
             {
-                options.AppId = "314684660123452";
-                options.AppSecret = "927fd994162a95024f5712dc9ab2b56d";
+                options.AppId = "314684663450123452";
+                options.AppSecret = "927fd9941erv4662a95024f5712dc9ab2b56d";
             });
             services.AddAuthentication().AddGoogle(options =>
             {
-                options.ClientId = "211910687416-mol601hvjbbjurla4c23e5qjjj73lb1g.apps.googleusercontent.com";
-                options.ClientSecret = "YuYR-TBLg7TpPCGvgu_Z1YlT";
+                options.ClientId = "211910687416-mol601hvjbbjurlagdfhhe5qjjj73lb1g.apps.googleusercontent.com";
+                options.ClientSecret = "YuYR-TBLg7TpPCGdgrvgu_Z1YlT";
             });
             services.AddSession(options =>
             {
